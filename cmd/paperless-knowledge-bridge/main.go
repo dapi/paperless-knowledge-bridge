@@ -52,7 +52,11 @@ func main() {
 			cancel()
 		}
 	}()
-	server := api.Server{Store: store, Embedder: embedder, ConsumerToken: os.Getenv("BRIDGE_CONSUMER_TOKEN"), WebhookToken: os.Getenv("PAPERLESS_WEBHOOK_TOKEN"), Sync: sync}
+	server := api.Server{Store: store, Embedder: embedder, ConsumerTokens: map[string]string{
+		"open-webui": os.Getenv("BRIDGE_OPENWEBUI_TOKEN"),
+		"codex":      os.Getenv("BRIDGE_CODEX_TOKEN"),
+		"hermes":     os.Getenv("BRIDGE_HERMES_TOKEN"),
+	}, WebhookToken: os.Getenv("PAPERLESS_WEBHOOK_TOKEN"), Sync: sync}
 	log.Printf("paperless knowledge bridge listening on %s (pilot_limit=%d)", getenv("LISTEN_ADDR", ":8080"), pilot)
 	log.Fatal(http.ListenAndServe(getenv("LISTEN_ADDR", ":8080"), server.Handler()))
 }

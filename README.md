@@ -27,7 +27,9 @@ AI consumers. The governing cross-consumer contract is maintained in
 | `LITELLM_URL` | OpenAI-compatible LiteLLM base URL (including `/v1`). |
 | `LITELLM_API_KEY` | LiteLLM authentication, if enabled. |
 | `EMBEDDING_MODEL` | Defaults to dedicated `paperless-embedding`. |
-| `BRIDGE_CONSUMER_TOKEN` | Bearer token required for consumer search. |
+| `BRIDGE_OPENWEBUI_TOKEN` | Bearer token required for Open WebUI search. |
+| `BRIDGE_CODEX_TOKEN` | Bearer token required for Codex search. |
+| `BRIDGE_HERMES_TOKEN` | Bearer token required for Hermes search. |
 | `PAPERLESS_WEBHOOK_TOKEN` | Bearer token required for a Paperless workflow webhook. |
 | `PILOT_LIMIT` | `1..20` for the approved pilot; `0` after acceptance. |
 | `RECONCILE_INTERVAL` | Full reconciliation cadence; defaults to `15m`. |
@@ -38,8 +40,11 @@ put them in a local config file or this repository.
 
 ## HTTP contract
 
-`POST /v1/search` requires `Authorization: Bearer <BRIDGE_CONSUMER_TOKEN>` and
-a JSON object such as `{ "query": "договор аренды", "limit": 5 }`.
+`GET /openapi.json` describes the single external tool operation.
+
+`POST /v1/search` requires `Authorization: Bearer <consumer-specific token>`,
+`X-Paperless-Knowledge-Consumer: open-webui|codex|hermes`, and a JSON object
+such as `{ "query": "договор аренды", "limit": 5 }`.
 
 `POST /v1/hooks/paperless` requires
 `Authorization: Bearer <PAPERLESS_WEBHOOK_TOKEN>`. It starts an asynchronous
